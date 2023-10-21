@@ -82,7 +82,10 @@ const ChatComponent = observer(() => {
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: 'nearest',
+        });
     }, [chat.messages]);
 
     return (
@@ -126,7 +129,6 @@ const ChatComponent = observer(() => {
                     ))}
                     <div ref={messagesEndRef} />
                 </Box>
-
             </Box>
             <Box sx={{
                 width: 1,
