@@ -34,9 +34,21 @@ const MainPage = observer(() => {
 
     const getChats = async () => {
         const chats = localStorage.getItem("chats");
-        const parsedChats = chats ? JSON.parse(chats) : [];
+        const parsedChats = chats ? JSON.parse(chats) as chat[] : [] as chat[];
         setChats(parsedChats);
     }
+
+    const [currentChat, setCurrentChat] = useState<chat>();
+    const getCurrentChat = async () => {
+        const chats = localStorage.getItem("chats");
+        const parsedChats = chats ? JSON.parse(chats) as chat[] : [] as chat[];
+        const currentChat = parsedChats.find((chat: chat) => chat.name === store.state.currentChat);
+        setCurrentChat(currentChat);
+    }
+
+    useEffect(() => {
+        getCurrentChat();
+    }, [store.state.currentChat]);
 
     useEffect(() => {
         getChats();
@@ -71,7 +83,7 @@ const MainPage = observer(() => {
                             sx={{
                                 display: "flex",
                                 margin: "0.5rem",
-                                flexGrow: 1,
+                                width: 1,
                             }}
                             onClick={() => {
                                 setIsCreateModalOpen(true);
@@ -86,7 +98,7 @@ const MainPage = observer(() => {
                             height: "90%",
                             flexDirection: "column",
                             justifyContent: "flex-start",
-                            display: isHistoryOpen ? "flex" : "none",
+                            display: "flex",
                         }}
                     >
                         <ChatsList chats={chats} />

@@ -1,14 +1,14 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Box, Typography } from "@mui/material";
 import { Context } from "../../../App";
 import { chat } from "../../../types";
 
-const ContextList = observer(({ chats }: {
-    chats: chat[]; 
+
+const ChatsList = observer(({ chats }: {
+    chats: chat[];
 }) => {
     const store = useContext(Context);
-
     return (
         <Box
             sx={{
@@ -58,4 +58,4 @@ const ContextList = observer(({ chats }: {
     );
 });
 
-export default ContextList;
+export default ChatsList;

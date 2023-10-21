@@ -29,11 +29,11 @@ const CreateChatModal = observer(({ open, onClose }: CreateChatModalProps) => {
     const onSubmit = () => {
         setError("");
         if (name.trim() === "") {
-            setError("Name is required");
+            setError("Nazwa nie może być pusta");
             return;
         }
         if (isChatNameUnique(name)) {
-            setError("Name is not unique");
+            setError("Nazwa jest zajęta");
             return;
         }
         localStorage.setItem("chats", JSON.stringify([...JSON.parse(localStorage.getItem("chats") || "[]"), { name, messages: [] }]));
@@ -44,9 +44,13 @@ const CreateChatModal = observer(({ open, onClose }: CreateChatModalProps) => {
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Dodaj Czat</DialogTitle>
             <DialogContent>
-                <form>
+                <form onSubmit={
+                    (event) => {
+                        event.preventDefault();
+                    }
+                }>
                     <TextField
-                        label="Name"
+                        label="Nazwa czatu"
                         value={name}
                         onChange={
                             (event) => setName(event.target.value)
@@ -57,8 +61,9 @@ const CreateChatModal = observer(({ open, onClose }: CreateChatModalProps) => {
                     <Button type="submit" variant="contained" color="primary" onClick={onSubmit}>
                         Dodaj
                     </Button>
+
+                    <Typography color="error">{error}</Typography>
                 </form>
-                <Typography color="error">{error}</Typography>
             </DialogContent>
         </Dialog >
     );
