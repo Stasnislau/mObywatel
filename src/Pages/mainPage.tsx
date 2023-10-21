@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../App";
 import { chat } from "../types";
 import ChattingComponent from "../components/Chats/chattingComponent";
+import useStateLS from "../hooks/useStateLS";
 
 const Container = styled(Box)`
   display: flex;
@@ -16,27 +17,6 @@ const Container = styled(Box)`
 
 const MainPage = observer(() => {
     const store = useContext(Context);
-
-    const getChat = async () => {
-        const chat = localStorage.getItem("chat");
-        const parsedChat = chat ? JSON.parse(chat) as chat : {} as chat;
-        setChat(parsedChat);
-    }
-    const [chat, setChat] = useState<chat>({} as chat);
-    useEffect(() => {
-        if (store.state.shouldUpdateChat) {
-            getChat();
-            store.setShouldUpdateChat(false);
-        }
-    }, [store.state.shouldUpdateChat]);
-    useEffect(() => {
-        if (!localStorage.getItem("chat")) {
-            localStorage.setItem("chat", JSON.stringify({
-                messages: [],
-            }));
-        }
-    }, []);
-
     return (
         <Container>
             <Box

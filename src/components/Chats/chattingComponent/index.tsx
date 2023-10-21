@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { List, Box } from '@mui/material';
 import { chat, message } from '../../../types';
 import InputBox from '../inputBox';
@@ -6,21 +6,21 @@ import { Context } from '../../../App';
 import { observer } from 'mobx-react-lite';
 import MessageBubble from '../MessageBubble';
 import React from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import useStateLS from '../../../hooks/useStateLS';
 
 const ChatComponent = observer(() => {
     const store = useContext(Context);
-    const [messages, setMessages] = useState<message[]>([] as message[]);
+    const [messagesAnimationRef] = useAutoAnimate<HTMLDivElement>();
     const [newMessage, setNewMessage] = useState('');
-    useEffect(() => {
-        const chat = localStorage.getItem("chat");
-        const parsedChat = chat ? JSON.parse(chat) as chat : {} as chat;
-        setChat(parsedChat);
-        setMessages(parsedChat.messages);
-    }, [store.state.shouldUpdateChat]);
-    const [chat, setChat] = useState<chat>({} as chat);
+    const [chat, setChat] = useStateLS<chat>('chat', {
+        messages: [],
+    });
+
+
     const sendMessageToServer = async () => {
         try {
-            if (!messages || messages.length === 0) {
+            if (!chat.messages || chat.messages.length === 0) {
                 return;
             }
             store.setIsLoading(true);
@@ -29,7 +29,7 @@ const ChatComponent = observer(() => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ messages: messages }),
+                body: JSON.stringify({ messages: chat.messages }),
             });
             if (!response.ok) {
                 throw new Error('Something went wrong');
@@ -39,18 +39,13 @@ const ChatComponent = observer(() => {
                 console.log('Something went wrong, no message')
                 return;
             }
-            setMessages([...messages, {
-                content: data.completion.choices[0].message.content,
-                role: data.completion.choices[0].message.role,
-            }]);
-            localStorage.setItem('chat', JSON.stringify({
+            setChat({
                 ...chat,
                 messages: [...chat.messages, {
                     content: data.completion.choices[0].message.content,
                     role: data.completion.choices[0].message.role,
                 }]
-            }));
-
+            });
         } catch (error) {
             console.log(error);
         }
@@ -58,12 +53,22 @@ const ChatComponent = observer(() => {
             store.setIsLoading(false);
         }
     }
+
+    const isNewUserMessage = useMemo(() => {
+        if (!chat.messages || chat.messages.length === 0) {
+            return false;
+        }
+        return chat.messages[chat.messages.length - 1].role === 'user';
+    }, [chat.messages]);
+
+    useEffect(() => {
+        if (isNewUserMessage) {
+            sendMessageToServer();
+        }
+    }, [isNewUserMessage]);
+
     const handleSend = async () => {
-        setMessages([...messages, {
-            content: newMessage,
-            role: 'user',
-        }]);
-        setNewMessage('');
+        console.log('handleSend')
         setChat({
             ...chat,
             messages: [...chat.messages, {
@@ -71,24 +76,15 @@ const ChatComponent = observer(() => {
                 role: 'user',
             }]
         });
-        localStorage.setItem('chat', JSON.stringify({
-            ...chat,
-            messages: [...chat.messages, {
-                content: newMessage,
-                role: 'user',
-            }]
-        }));
-        store.setShouldUpdateChat(true);
-        await sendMessageToServer();
+        setNewMessage('');
     }
 
-
-
-
     const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
-    }, [messages]);
+    }, [chat.messages]);
+
     return (
         <Box sx={
             {
@@ -112,7 +108,7 @@ const ChatComponent = observer(() => {
                     flexGrow: 1,
                 }
             }>
-                <List sx={
+                <Box sx={
                     {
                         display: 'flex',
                         flexDirection: 'column',
@@ -120,14 +116,17 @@ const ChatComponent = observer(() => {
                         minHeight: 0,
                         width: 0.9,
                     }
-                }>
-                    {messages && messages.length > 0 && messages.map((message, index) => (
+                }
+                    ref={messagesAnimationRef}
+                >
+                    {chat && chat.messages && chat.messages.length > 0 && chat.messages.map((message, index) => (
                         <MessageBubble text={message.content} isMine={
                             message.role === 'user'
                         } key={index} />
                     ))}
                     <div ref={messagesEndRef} />
-                </List>
+                </Box>
+
             </Box>
             <Box sx={{
                 width: 1,
