@@ -1,42 +1,37 @@
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../../../App";
 import React from "react";
-import {
-    Box,
-    IconButton,
-    InputAdornment,
-    TextField,
-} from "@mui/material";
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { observer } from "mobx-react-lite";
 import { FormControl } from "@mui/material";
 
 interface InputBoxProps {
-    onSend: () => void;
-    text: string;
-    setText: (text: string) => void;
+  onSend: () => void;
+  text: string;
+  setText: (text: string) => void;
 }
 const InputBox = observer(({ onSend, text, setText }: InputBoxProps) => {
-    const store = useContext(Context);
-    const handleSend = () => {
-        if (text === "") {
-            return;
-        }
-        onSend();
-    };
+  const store = useContext(Context);
+  const handleSend = () => {
+    if (text === "") {
+      return;
+    }
+    onSend();
+  };
 
-
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === "Enter" && text.trim() !== "") {
-            handleSend();
-        }
-    };
-    return (
-        <Box sx={{
-            width: 0.9,
-        }}>
-
-            <FormControl
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && text.trim() !== "") {
+      handleSend();
+    }
+  };
+  return (
+    <Box
+      sx={{
+        width: 0.9,
+      }}
+    >
+      {/* <FormControl
                 fullWidth
                 sx={{
                     "&.MuiFormControl-root": {
@@ -65,9 +60,17 @@ const InputBox = observer(({ onSend, text, setText }: InputBoxProps) => {
                         ),
                     }}
                 />
-            </FormControl>
-        </Box>
-    );
+            </FormControl> */}
+      <textarea
+        value={text}
+        onChange={(event) => setText(event.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Wpisz wiadomość"
+        className="w-full"
+        rows={2}
+      />
+    </Box>
+  );
 });
 
 export default InputBox;

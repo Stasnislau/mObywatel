@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-slate-900 transition-colors duration-300 ease-in-out;
+  }
+
+  h1 {
+    @apply text-4xl font-bold my-2;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold my-2;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold my-2;
+  }
+
+  h4 {
+    @apply text-xl font-semibold my-2;
+  }
+
+  h5 {
+    @apply text-lg font-semibold my-2;
+  }
+
+  h6 {
+    @apply text-base font-semibold my-2;
+  }
+
+  p {
+    @apply text-base my-2;
+  }
+
+  a {
+    @apply text-green-700 underline;
+  }
+
+  select,
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="search"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea {
+    @apply border border-gray-300
+      rounded-md px-3 py-2 text-base focus:outline-none
+      focus:ring-2 focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-800;
+  }
+
+  select {
+    @apply cursor-pointer;
+  }
+
+  select:focus > option:hover {
+    @apply bg-primary-800 text-white;
+
+    &:hover {
+      @apply bg-primary-700;
+    }
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    @apply accent-primary-800 rounded-sm h-6 w-6 mr-2 cursor-pointer;
+  }
+
+  input[type="range"] {
+    @apply accent-primary-800 bg-white rounded-sm
+     h-1 cursor-pointer;
+  }
+
+  button {
+    @apply bg-gradient-to-b 
+      text-white rounded-md px-3 py-2 text-base focus:outline-none
+      focus:ring-2 focus:border-transparent
+     transition-colors duration-300 ease-in-out;
+
+    &.primary {
+      @apply from-primary-500 to-primary-400 focus:ring-primary-400 hover:from-primary-500 hover:to-primary-400;
+    }
+
+    &.secondary {
+      @apply from-gray-600 to-gray-700 focus:ring-gray-600 hover:from-gray-700 hover:to-gray-800;
+    }
+
+    &.tertiary {
+      @apply from-blue-600 to-blue-700 focus:ring-blue-600 hover:from-blue-700 hover:to-blue-800;
+    }
+
+    &.danger {
+      @apply from-red-600 to-red-700 focus:ring-red-600 hover:from-red-700 hover:to-red-800;
+    }
+
+    &.success {
+      @apply from-green-500 to-green-600 focus:ring-green-500 hover:from-green-600 hover:to-green-700;
+    }
+
+    &.warning {
+      @apply from-yellow-500 to-yellow-600 focus:ring-yellow-500 hover:from-yellow-600 hover:to-yellow-700;
+    }
+  }
+}
