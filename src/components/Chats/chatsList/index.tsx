@@ -1,13 +1,29 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { observer } from "mobx-react-lite";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { Context } from "../../../App";
 import { chat } from "../../../types";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useState } from "react";
+import { useEffect } from "react";
 
 
-const ChatsList = observer(({ chats }: {
-    chats: chat[];
-}) => {
+const ChatsList = observer(() => {
+    const [chats, setChats] = useState<chat[]>([] as chat[]);
+    const getChats = async () => {
+        const chats = localStorage.getItem("chats");
+        const parsedChats = chats ? JSON.parse(chats) as chat[] : [] as chat[];
+        setChats(parsedChats);
+    }
+    useEffect (() => {
+        getChats();
+    }, [chats]);
+    const handleRemoveChat = (name: string) => {
+        if (store.state.currentChat === name) {
+            store.setCurrentChat("");
+        }
+        localStorage.setItem("chats", JSON.stringify([...JSON.parse(localStorage.getItem("chats") || "[]").filter((chat: chat) => chat.name !== name)]));
+    }
     const store = useContext(Context);
     return (
         <Box
@@ -38,6 +54,9 @@ const ChatsList = observer(({ chats }: {
                                     : "rgba(255,255,255,0.5)",
                             },
                             transition: "background-color 0.2s ease-in-out",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
                         }}
                         onClick={() => {
                             store.setCurrentChat(chat.name);
@@ -52,6 +71,12 @@ const ChatsList = observer(({ chats }: {
                         >
                             {chat.name}
                         </Typography>
+                        <IconButton onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveChat(chat.name)
+                        }}>
+                            <DeleteIcon />
+                        </IconButton>
                     </Box>
                 ))}
         </Box>

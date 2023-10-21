@@ -1,7 +1,6 @@
 export interface message {
     text: string;
-    link: string[];
-    images: string;
+    owner: string;
 }
 
 export interface chat {
