@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import formatAndSanitizeText from "../../../parsers/formatAndSanitizeText";
 
 
 interface MessageBubbleProps {
@@ -7,7 +8,7 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble = ({ text, isMine }: MessageBubbleProps) => {
-
+    const finalText = formatAndSanitizeText(text);
     return (
         <Box
             sx={{
@@ -35,7 +36,7 @@ const MessageBubble = ({ text, isMine }: MessageBubbleProps) => {
                 <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                     {isMine ? "Ja" : "Asystent"}
                 </Typography>
-                <Typography variant="body1">{text}</Typography>
+                <Typography variant="body1">{finalText}</Typography>
             </Box>
 
         </Box>

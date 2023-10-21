@@ -8,6 +8,7 @@ import MessageBubble from '../MessageBubble';
 import React from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import useStateLS from '../../../hooks/useStateLS';
+import linkifyText from '../../../parsers/linkifyText';
 
 const ChatComponent = observer(() => {
     const store = useContext(Context);
@@ -42,7 +43,7 @@ const ChatComponent = observer(() => {
             setChat({
                 ...chat,
                 messages: [...chat.messages, {
-                    content: data.completion.choices[0].message.content,
+                    content: linkifyText(data.completion.choices[0].message.content),
                     role: data.completion.choices[0].message.role,
                 }]
             });
