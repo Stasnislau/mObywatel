@@ -30,7 +30,7 @@ const MessageBubble = ({ text, isMine }: MessageBubbleProps) => {
           alignItems: isMine ? "flex-end" : "flex-start",
         }}
       >
-        <h4>{isMine ? "Ja" : "Asystent"}</h4>
+        <h4>{isMine ? "Ja" : "mEkspert"}</h4>
         <p>{text}</p>
       </Box>
     </Box>
