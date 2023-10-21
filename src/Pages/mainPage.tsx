@@ -46,19 +46,26 @@ const MainPage = observer(() => {
     const [containerRef] = useAutoAnimate<HTMLDivElement>()
     return (
         <Container>
-            <SideBar className={"is-open"}>
+            <SideBar className={"is-open"} sx={
+                {
+                    display: "flex",
+                    flexDirection: "column",
+                }
+            }>
                 <Box
                     sx={{
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "flex-start",
                         width: 1,
+                        flexGrow: 1,
+                        height: 0,
+                        overflowY: "auto",
                     }}
                 >
                     <Box
                         sx={{
                             width: 1,
-                            height: "10%",
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",
@@ -101,7 +108,7 @@ const MainPage = observer(() => {
             <Box
                 sx={{
                     width: "95%",
-                    height: "100%",
+                    flexGrow: 1,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",

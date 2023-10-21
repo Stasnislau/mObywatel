@@ -7,24 +7,24 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 import { useEffect } from "react";
 
-
 const ChatsList = observer(() => {
+    const store = useContext(Context);
     const [chats, setChats] = useState<chat[]>([] as chat[]);
     const getChats = async () => {
         const chats = localStorage.getItem("chats");
         const parsedChats = chats ? JSON.parse(chats) as chat[] : [] as chat[];
         setChats(parsedChats);
     }
-    useEffect (() => {
+    useEffect(() => {
         getChats();
-    }, [chats]);
+    }, [chats.length, store.state.currentChat]);
     const handleRemoveChat = (name: string) => {
         if (store.state.currentChat === name) {
             store.setCurrentChat("");
         }
         localStorage.setItem("chats", JSON.stringify([...JSON.parse(localStorage.getItem("chats") || "[]").filter((chat: chat) => chat.name !== name)]));
     }
-    const store = useContext(Context);
+
     return (
         <Box
             sx={{

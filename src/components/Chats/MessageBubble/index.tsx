@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import { message } from "../../../types";
 
 
 interface MessageBubbleProps {
@@ -24,7 +23,7 @@ const MessageBubble = ({ text, isMine }: MessageBubbleProps) => {
         >
             <Box
                 sx={{
-                    backgroundColor: isMine ? "#a8daee" : "#FFFFFF",
+                    backgroundColor: isMine ? "#a8daee" : "#d8d8d8",
                     borderRadius: "1rem",
                     padding: "0.5rem 1rem",
                     maxWidth: "80%",

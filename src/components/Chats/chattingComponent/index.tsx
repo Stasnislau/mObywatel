@@ -57,7 +57,6 @@ const ChatComponent = observer(() => {
                     height: 0,
                     overflowY: 'auto',
                     flexGrow: 1,
-
                 }
             }>
                 <List sx={
@@ -66,7 +65,7 @@ const ChatComponent = observer(() => {
                         flexDirection: 'column',
                         flexGrow: 1,
                         minHeight: 0,
-                        width: 0.75,
+                        width: 0.5,
                     }
                 }>
                     {messages.map((message, index) => (
