@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import linkifyText from "../../../parsers/linkifyText";
 
 interface MessageBubbleProps {
   text: string;
@@ -31,7 +32,9 @@ const MessageBubble = ({ text, isMine }: MessageBubbleProps) => {
         }}
       >
         <h4>{isMine ? "Ja" : "mEkspert"}</h4>
-        <p>{text}</p>
+        <p>
+          {linkifyText(text)}
+        </p>
       </Box>
     </Box>
   );
