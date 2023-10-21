@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Lato';
+  src: url('assets/fonts/Lato-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lato';
+  src: url('assets/fonts/Lato-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -109,5 +127,10 @@
     &.warning {
       @apply from-yellow-500 to-yellow-600 focus:ring-yellow-500 hover:from-yellow-600 hover:to-yellow-700;
     }
+  }
+
+  .message {
+    // white background, rounded corners, and a drop shadow
+    @apply bg-white rounded-md shadow-md;
   }
 }
