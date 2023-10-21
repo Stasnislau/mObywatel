@@ -33,7 +33,7 @@ const MessageBubble = ({ text, isMine }: MessageBubbleProps) => {
                 }}
             >
                 <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                    {isMine ? "Ja" : "Chatbot"}
+                    {isMine ? "Ja" : "Asystent"}
                 </Typography>
                 <Typography variant="body1">{text}</Typography>
             </Box>

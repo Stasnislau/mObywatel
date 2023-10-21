@@ -5,37 +5,90 @@ import InputBox from '../inputBox';
 import { Context } from '../../../App';
 import { observer } from 'mobx-react-lite';
 import MessageBubble from '../MessageBubble';
+import React from 'react';
 
 const ChatComponent = observer(() => {
     const store = useContext(Context);
     const [messages, setMessages] = useState<message[]>([] as message[]);
     const [newMessage, setNewMessage] = useState('');
-    const [currentChat, setCurrentChat] = useState<chat>({} as chat);
     useEffect(() => {
-        const chats = localStorage.getItem("chats");
-        const parsedChats = chats ? JSON.parse(chats) as chat[] : [] as chat[];
-        const currentChat = parsedChats.find((chat: chat) => chat.name === store.state.currentChat);
-        if (!currentChat) return;
-        setCurrentChat(currentChat);
-        setMessages(currentChat.messages);
-    }, [store.state.currentChat]);
-    const handleSend = () => {
+        const chat = localStorage.getItem("chat");
+        const parsedChat = chat ? JSON.parse(chat) as chat : {} as chat;
+        setChat(parsedChat);
+        setMessages(parsedChat.messages);
+    }, [store.state.shouldUpdateChat]);
+    const [chat, setChat] = useState<chat>({} as chat);
+    const sendMessageToServer = async () => {
+        try {
+            if (!messages || messages.length === 0) {
+                return;
+            }
+            store.setIsLoading(true);
+            const response = await fetch('http://localhost:5000/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ messages: messages }),
+            });
+            if (!response.ok) {
+                throw new Error('Something went wrong');
+            }
+            const data = await response.json();
+            if (!data || !data.completion || data.completion.choices.length === 0 || !data.completion.choices[0].message) {
+                console.log('Something went wrong, no message')
+                return;
+            }
+            setMessages([...messages, {
+                content: data.completion.choices[0].message.content,
+                role: data.completion.choices[0].message.role,
+            }]);
+            localStorage.setItem('chat', JSON.stringify({
+                ...chat,
+                messages: [...chat.messages, {
+                    content: data.completion.choices[0].message.content,
+                    role: data.completion.choices[0].message.role,
+                }]
+            }));
+
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            store.setIsLoading(false);
+        }
+    }
+    const handleSend = async () => {
         setMessages([...messages, {
-            text: newMessage,
-            owner: 'user',
+            content: newMessage,
+            role: 'user',
         }]);
         setNewMessage('');
-        setCurrentChat({
-            ...currentChat,
-            messages: [...currentChat.messages, {
-                text: newMessage,
-                owner: 'user',
+        setChat({
+            ...chat,
+            messages: [...chat.messages, {
+                content: newMessage,
+                role: 'user',
             }]
         });
-        localStorage.setItem("chats", JSON.stringify([...JSON.parse(localStorage.getItem("chats") || "[]").filter((chat: chat) => chat.name !== currentChat.name), currentChat]));
+        localStorage.setItem('chat', JSON.stringify({
+            ...chat,
+            messages: [...chat.messages, {
+                content: newMessage,
+                role: 'user',
+            }]
+        }));
+        store.setShouldUpdateChat(true);
+        await sendMessageToServer();
+    }
 
-    };
 
+
+
+    const messagesEndRef = React.useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
+    }, [messages]);
     return (
         <Box sx={
             {
@@ -65,14 +118,15 @@ const ChatComponent = observer(() => {
                         flexDirection: 'column',
                         flexGrow: 1,
                         minHeight: 0,
-                        width: 0.5,
+                        width: 0.9,
                     }
                 }>
-                    {messages.map((message, index) => (
-                        <MessageBubble text={message.text} isMine={
-                            message.owner === 'user'
+                    {messages && messages.length > 0 && messages.map((message, index) => (
+                        <MessageBubble text={message.content} isMine={
+                            message.role === 'user'
                         } key={index} />
                     ))}
+                    <div ref={messagesEndRef} />
                 </List>
             </Box>
             <Box sx={{

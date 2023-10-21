@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 interface storeInterface {
   isLoading: boolean;
-  currentChat: string | undefined;
+  shouldUpdateChat: boolean;
 }
 
 export default class Store {
@@ -10,7 +10,7 @@ export default class Store {
   constructor() {
     this.state = {
       isLoading: false,
-      currentChat: undefined,
+      shouldUpdateChat: true,
     };
     makeAutoObservable(this);
   }
@@ -19,7 +19,8 @@ export default class Store {
     this.state.isLoading = isLoading;
   }
 
-  setCurrentChat(chatId: string) {
-    this.state.currentChat = chatId;
+  setShouldUpdateChat(shouldUpdateChat: boolean) {
+    this.state.shouldUpdateChat = shouldUpdateChat;
   }
+
 }

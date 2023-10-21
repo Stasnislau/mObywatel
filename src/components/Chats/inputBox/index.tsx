@@ -18,7 +18,6 @@ interface InputBoxProps {
 }
 const InputBox = observer(({ onSend, text, setText }: InputBoxProps) => {
     const store = useContext(Context);
-    const [isRecording, setIsRecording] = useState(false);
     const handleSend = () => {
         if (text === "") {
             return;
@@ -32,10 +31,9 @@ const InputBox = observer(({ onSend, text, setText }: InputBoxProps) => {
             handleSend();
         }
     };
-
     return (
         <Box sx={{
-            width: 0.5,
+            width: 0.9,
         }}>
 
             <FormControl
@@ -51,7 +49,7 @@ const InputBox = observer(({ onSend, text, setText }: InputBoxProps) => {
             >
                 <TextField
                     fullWidth
-                    maxRows={3}
+                    maxRows={2}
                     multiline
                     placeholder="Wpisz wiadomość"
                     value={text}
