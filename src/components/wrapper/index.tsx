@@ -9,6 +9,7 @@ const WrapperComponent = observer(
     return (
       <div className="w-full h-screen flex flex-col">
         <header className="h-[10vh] flex justify-between items-center px-5">
+          <img src="/logo.png" alt="logo" className="w-10 h-10 rounded-lg" />
           <h3 className="w-fit">mEkspert</h3>
           <ClearAll onClick={() => setChat({ messages: [] })} />
         </header>

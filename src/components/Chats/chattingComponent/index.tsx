@@ -155,7 +155,6 @@ const ChatComponent = observer(() => {
           height: "15vh",
         }}
       >
-
         <InputBox
           isLoading={isLoading}
           onSend={handleSend}
