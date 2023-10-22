@@ -10,6 +10,8 @@ import InputBox from '../inputBox';
 const ChatComponent = observer(() => {
   const [messagesAnimationRef] = useAutoAnimate<HTMLDivElement>();
   const [newMessage, setNewMessage] = useState("");
+  const [suggestion, setSuggestion] = useState<string>("");
+  const [sendAutoMessage, setSendAutoMessage] = useState(false);
   const [chat, setChat] = useStateLS<chat>("chat", {
     messages: [],
   });
@@ -51,6 +53,7 @@ const ChatComponent = observer(() => {
           },
         ],
       });
+      setSuggestion(data.completion.choices[0].message.suggestion);
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,8 +74,14 @@ const ChatComponent = observer(() => {
     }
   }, [isNewUserMessage]);
 
+  useEffect(() => {
+    if (sendAutoMessage) {
+      handleSend();
+      setSendAutoMessage(false);
+    }
+  }, [sendAutoMessage]);
+
   const handleSend = async () => {
-    console.log("handleSend");
     setChat({
       ...chat,
       messages: [
@@ -83,6 +92,7 @@ const ChatComponent = observer(() => {
         },
       ],
     });
+    setSuggestion("");
     setNewMessage("");
   };
 
@@ -120,27 +130,40 @@ const ChatComponent = observer(() => {
             />
           ))}
         <div className="messages-shadow" />
+        <button
+          className="secondary tiny mb-2"
+          style={{
+            display: !suggestion || suggestion.length > 120 || !suggestion.includes('?') ? "none" : "flex",
+          }}
+          onClick={() => {
+            setNewMessage(suggestion);
+            setSendAutoMessage(true);
+          }}
+        >
+          {suggestion}
+        </button>
         <div ref={messagesEndRef} />
       </Box>
       <Box
         sx={{
           width: 1,
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           padding: "1rem",
           height: "15vh",
         }}
       >
+
         <InputBox
           isLoading={isLoading}
           onSend={handleSend}
           text={newMessage}
           setText={setNewMessage}
-          
         />
       </Box>
-    </Box>
+    </Box >
   );
 });
 
