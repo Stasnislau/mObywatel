@@ -146,6 +146,6 @@ body {
   }
 
   header {
-    @apply bg-primary-500 text-white p-3 shadow-lg;
+    @apply bg-primary-500 text-white p-3 shadow-lg z-[999999];
   }
 }
