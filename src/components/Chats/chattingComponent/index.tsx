@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useMemo, useState } from 'react';
 import useStateLS from '../../../hooks/useStateLS';
-import linkifyText from '../../../parsers/linkifyText';
 import { chat } from '../../../types';
 import MessageBubble from '../MessageBubble';
 import InputBox from '../inputBox';
@@ -138,6 +137,7 @@ const ChatComponent = observer(() => {
           onSend={handleSend}
           text={newMessage}
           setText={setNewMessage}
+          
         />
       </Box>
     </Box>

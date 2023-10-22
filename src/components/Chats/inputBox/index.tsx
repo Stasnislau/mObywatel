@@ -20,6 +20,7 @@ const InputBox = observer(
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
       if (event.key === "Enter" && text.trim() !== "") {
+        event.preventDefault();
         handleSend();
       }
     };
